@@ -1,0 +1,40 @@
+crawler:
+requests：用于发起HTTP请求。
+BeautifulSoup：用于解析HTML文档，方便提取信息。
+time：提供时间相关的函数，这里用来控制爬虫的请求频率。
+RobotFileParser：用于解析robots.txt文件，以确定是否允许爬虫访问特定的URL。
+UserAgent：用于生成随机的用户代理字符串，模拟不同的浏览器访问。
+
+函数 can_fetch(url)
+这个函数检查根据给定的URL，爬虫是否有权限抓取该页面的内容。它通过读取和解析目标网站的robots.txt文件来决定。
+创建一个RobotFileParser对象，并设置其对应的robots.txt文件的URL。
+尝试读取robots.txt文件，并使用通配符*代表所有用户代理，检查是否可以抓取指定的URL。
+如果读取失败（例如，因为网络错误或robots.txt文件不存在），则默认返回True，即允许抓取。
+
+函数 scrape_and_save(url, filename)
+此函数负责执行实际的网页抓取，并将结果保存到文件中。
+检查robots.txt：首先调用can_fetch(url)确保抓取是被允许的。
+raise_for_status() 方法:
+这个方法检查 Response 对象中的 HTTP 状态码。如果状态码表示请求成功，那么什么也不会发生，程序将继续执行
+如果状态码表示客户端错误（4xx）或服务器错误（5xx），则 raise_for_status() 会抛出一个 HTTPError 异常。
+response.text 是从 requests 库的 Response 对象中获取到的字符串形式的响应内容
+soup.title：
+这是通过 BeautifulSoup 对象访问 HTML 文档中的 <title> 标签。
+如果页面中有 <title> 标签，那么 soup.title 将返回一个 Tag 对象；如果没有，则返回 None。
+soup.title.string：
+如果 soup.title 不为 None，则进一步访问 .string 属性来获取标签内的文本内容。
+.string 返回的是标签内直接包含的字符串，而不是整个标签。
+soup.find_all('p')：
+find_all 方法用于查找文档中所有的指定标签，这里是查找所有的 <p> 标签。
+它返回一个包含所有匹配标签的列表（或迭代器）。每个元素都是一个 Tag 对象，代表了 HTML 中的一个 <p> 元素。
+p.get_text(strip=True)：
+对于每一个找到的 <p> 标签（p），调用 .get_text() 方法来提取该标签内的所有文本内容。
+strip=True 参数告诉 .get_text() 去除文本两端的空白字符（如空格、换行符等）
+设置用户代理：使用fake_useragent库创建一个随机的用户代理字符串，模拟真实的浏览器访问。
+发送请求：向目标URL发送GET请求，并使用之前设置的用户代理头信息。
+处理响应：
+检查响应状态码，如果发生HTTP错误，则抛出异常。
+设置响应的编码为response.apparent_encoding，这是为了正确解码网页内容，避免乱码问题。
+
+主程序:定义了一组需要抓取的URL，并遍历这些URL，
+依次调用scrape_and_save函数进行抓取和保存操作。每次抓取之后，程序会暂停1秒钟
