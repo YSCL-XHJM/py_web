@@ -1,4 +1,4 @@
-giybeautifulsoup4==4.12.3
+beautifulsoup4==4.12.3
 jieba==0.42.1
 pyecharts==2.0.7
 Requests==2.32.3
