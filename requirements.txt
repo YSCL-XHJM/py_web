@@ -1,0 +1,8 @@
+altair==5.5.0
+beautifulsoup4==4.12.3
+jieba==0.42.1
+numpy==2.2.1
+pandas==2.2.3
+plotly==5.24.1
+pyecharts==2.0.7
+streamlit==1.41.1
